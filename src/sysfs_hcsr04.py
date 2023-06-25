@@ -27,7 +27,7 @@ class HCSR04(Sensor, Reconfigurable):
     @classmethod
     def new(cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]) -> Self:
         LOGGER.warning("starting!")
-        sensor = cls(HCSR04(config.name))
+        sensor = cls(config.name)
         sensor.reconfigure(config, dependencies)
         LOGGER.warning("initialized")
         return sensor
@@ -48,8 +48,8 @@ class HCSR04(Sensor, Reconfigurable):
     # Handles attribute reconfiguration
     def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
         LOGGER.warning("reconfig")
-        trigger_pin = config.attributes.fields["trigger_pin"].number_value
-        echo_pin = config.attributes.fields["echo_pin"].number_value
+        self.trigger_pin = config.attributes.fields["trigger_pin"].number_value
+        self.echo_pin = config.attributes.fields["echo_pin"].number_value
         return
 
     """ Implement the methods the Viam RDK defines for the sensor API (rdk:component:sensor) """
