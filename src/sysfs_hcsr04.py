@@ -12,8 +12,7 @@ from viam.logging import getLogger
 
 import time
 import asyncio
-
-import gpio as GPIO
+from periphery import GPIO
 
 LOGGER = getLogger(__name__)
 
@@ -43,29 +42,27 @@ class HCSR04(Sensor, Reconfigurable):
 
     # Handles attribute reconfiguration
     def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
-        self.trigger_pin = config.attributes.fields["trigger_pin"].number_value
-        self.echo_pin = config.attributes.fields["echo_pin"].number_value
+        self.trigger_pin = int(config.attributes.fields["trigger_pin"].number_value)
+        self.echo_pin = int(config.attributes.fields["echo_pin"].number_value)
         return
 
     """ Implement the methods the Viam RDK defines for the sensor API (rdk:component:sensor) """
 
-    async def get_readings(self, extra: Optional[Dict[str, Any]] = None, timeout: Optional[float] = None, **kwargs):
-        GPIO.setup(self.trigger_pin,GPIO.OUT)
-        GPIO.setup(self.echo_pin,GPIO.IN)
+    async def get_readings(self, extra: Optional[Dict[str, Any]] = None, **kwargs):
+        trigger = GPIO(self.trigger_pin, "out")
+        echo = GPIO(self.echo_pin, "in")
 
-        LOGGER.warning("pins set up")
+        trigger.write(False)
+        time.sleep(.1)
 
-        GPIO.output(self.trigger_pin, False)
-        time.sleep(.2)
-
-        GPIO.output(self.trigger_pin, True)
+        trigger.write(True)
         time.sleep(.00001)
-        GPIO.output(self.trigger_pin, False)
+        trigger.write(False)
 
-        while GPIO.input(self.echo_pin)==0:
+        while echo.read()==False:
             pulse_start = time.time()
 
-        while GPIO.input(self.echo_pin)==1:
+        while echo.read()==True:
             pulse_end = time.time()
 
         pulse_duration = pulse_end - pulse_start
@@ -73,6 +70,6 @@ class HCSR04(Sensor, Reconfigurable):
         distance = pulse_duration * 171.5
         distance = round(distance, 2)
 
-        GPIO.cleanup()
+        LOGGER.warning(distance)
 
         return {"distance": distance}
