@@ -26,28 +26,23 @@ class HCSR04(Sensor, Reconfigurable):
     # Constructor
     @classmethod
     def new(cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]) -> Self:
-        LOGGER.warning("starting!")
         sensor = cls(config.name)
         sensor.reconfigure(config, dependencies)
-        LOGGER.warning("initialized")
         return sensor
 
     # Validates JSON Configuration
     @classmethod
     def validate(cls, config: ComponentConfig):
-        LOGGER.warning("validating")
         trigger_pin = config.attributes.fields["trigger_pin"].number_value
         if trigger_pin == "":
             raise Exception("A trigger_pin must be defined")
         echo_pin = config.attributes.fields["echo_pin"].number_value
         if echo_pin == "":
             raise Exception("A echo_pin must be defined")
-        LOGGER.warning("validated")
         return
 
     # Handles attribute reconfiguration
     def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
-        LOGGER.warning("reconfig")
         self.trigger_pin = config.attributes.fields["trigger_pin"].number_value
         self.echo_pin = config.attributes.fields["echo_pin"].number_value
         return
@@ -57,6 +52,8 @@ class HCSR04(Sensor, Reconfigurable):
     async def get_readings(self, extra: Optional[Dict[str, Any]] = None, timeout: Optional[float] = None, **kwargs):
         GPIO.setup(self.trigger_pin,GPIO.OUT)
         GPIO.setup(self.echo_pin,GPIO.IN)
+
+        LOGGER.warning("pins set up")
 
         GPIO.output(self.trigger_pin, False)
         time.sleep(.2)
@@ -78,4 +75,4 @@ class HCSR04(Sensor, Reconfigurable):
 
         GPIO.cleanup()
 
-        return distance
+        return {"distance": distance}

@@ -1,6 +1,6 @@
 # sysfs_hcsr04 modular sensor component
 
-*sysfs_hcsr04* is a modular sensor component that provides distance readings from the HCSR04 ultrasonic sensor for boards that can use sysfs to interact with GPIO.
+*sysfs_hcsr04* is a Viam modular sensor component that provides distance readings from the HCSR04 ultrasonic sensor for boards that can use sysfs to interact with GPIO.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ The sysfs_hcsr04 resource fulfills the Viam sensor interface
 
 ### get_readings()
 
-The *get_readings()* command takes no arguments, and returns the detected distance in meters.
+The *get_readings()* command takes no arguments, and returns the detected distance in meters (with the key 'distance').
 
 ## Viam Component Configuration
 
