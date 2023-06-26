@@ -12,6 +12,7 @@ from viam.logging import getLogger
 
 import time
 import asyncio
+
 from periphery import GPIO
 
 LOGGER = getLogger(__name__)
@@ -44,6 +45,12 @@ class HCSR04(Sensor, Reconfigurable):
     def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
         self.trigger_pin = int(config.attributes.fields["trigger_pin"].number_value)
         self.echo_pin = int(config.attributes.fields["echo_pin"].number_value)
+        # set both pins to low state
+        echo = GPIO(self.echo_pin, "out")
+        trigger = GPIO(self.trigger_pin, "out")
+        echo.write(False)
+        trigger.write(False)
+
         return
 
     """ Implement the methods the Viam RDK defines for the sensor API (rdk:component:sensor) """
@@ -52,18 +59,21 @@ class HCSR04(Sensor, Reconfigurable):
         trigger = GPIO(self.trigger_pin, "out")
         echo = GPIO(self.echo_pin, "in")
 
-        trigger.write(False)
-        time.sleep(.1)
+        LOGGER.warning("pins set up")
 
         trigger.write(True)
         time.sleep(.00001)
         trigger.write(False)
+        LOGGER.warning("sent")
 
         while echo.read()==False:
             pulse_start = time.time()
+        LOGGER.warning("got 1")
 
         while echo.read()==True:
             pulse_end = time.time()
+
+        LOGGER.warning("got 2")
 
         pulse_duration = pulse_end - pulse_start
 
@@ -71,5 +81,8 @@ class HCSR04(Sensor, Reconfigurable):
         distance = round(distance, 2)
 
         LOGGER.warning(distance)
+
+        trigger.close()
+        echo.close()
 
         return {"distance": distance}
