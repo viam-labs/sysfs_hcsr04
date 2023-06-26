@@ -59,28 +59,20 @@ class HCSR04(Sensor, Reconfigurable):
         trigger = GPIO(self.trigger_pin, "out")
         echo = GPIO(self.echo_pin, "in")
 
-        LOGGER.warning("pins set up")
-
         trigger.write(True)
         time.sleep(.00001)
         trigger.write(False)
-        LOGGER.warning("sent")
 
         while echo.read()==False:
             pulse_start = time.time()
-        LOGGER.warning("got 1")
 
         while echo.read()==True:
             pulse_end = time.time()
-
-        LOGGER.warning("got 2")
 
         pulse_duration = pulse_end - pulse_start
 
         distance = pulse_duration * 171.5
         distance = round(distance, 2)
-
-        LOGGER.warning(distance)
 
         trigger.close()
         echo.close()
