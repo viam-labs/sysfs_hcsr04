@@ -1,0 +1,13 @@
+{
+  "module_id": "viam-labs:sysfs-hcsr04",
+  "visibility": "public",
+  "url": "https://github.com/viam-labs/sysfs_hcsr04",
+  "description": "sysfs_hcsr04 is a Viam modular sensor component that provides distance readings from the HCSR04 ultrasonic sensor for boards that can use sysfs to interact with GPIO",
+  "models": [
+    {
+      "api": "rdk:component:sensor",
+      "model": "viam-labs:sensor:sysfs-hcsr04"
+    }
+  ],
+  "entrypoint": "run.sh"
+}
