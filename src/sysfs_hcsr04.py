@@ -18,7 +18,7 @@ from periphery import GPIO
 LOGGER = getLogger(__name__)
 
 class HCSR04(Sensor, Reconfigurable):
-    MODEL: ClassVar[Model] = Model(ModelFamily("viamlabs", "sensor"), "sysfs-hcsr04")
+    MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "sensor"), "sysfs-hcsr04")
     
     trigger_pin: int
     echo_pin: int
