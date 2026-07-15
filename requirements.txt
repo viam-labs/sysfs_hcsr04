@@ -1,2 +1,2 @@
-viam-sdk==0.43.1
+viam-sdk==0.79.1
 python-periphery
