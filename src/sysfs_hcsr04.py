@@ -64,10 +64,10 @@ class HCSR04(Sensor, Reconfigurable):
         time.sleep(0.00001)
         trigger.write(False)
 
-        while echo.read() == False:
+        while not echo.read():
             pulse_start = time.time()
 
-        while echo.read() == True:
+        while echo.read():
             pulse_end = time.time()
 
         pulse_duration = pulse_end - pulse_start
