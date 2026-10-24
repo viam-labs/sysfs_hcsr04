@@ -17,15 +17,18 @@ from periphery import GPIO
 
 LOGGER = getLogger(__name__)
 
+
 class HCSR04(Sensor, Reconfigurable):
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "sensor"), "sysfs-hcsr04")
-    
+
     trigger_pin: int
     echo_pin: int
 
     # Constructor
     @classmethod
-    def new(cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]) -> Self:
+    def new(
+        cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
+    ) -> Self:
         sensor = cls(config.name)
         sensor.reconfigure(config, dependencies)
         return sensor
@@ -42,7 +45,9 @@ class HCSR04(Sensor, Reconfigurable):
         return
 
     # Handles attribute reconfiguration
-    def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
+    def reconfigure(
+        self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
+    ):
         self.trigger_pin = int(config.attributes.fields["trigger_pin"].number_value)
         self.echo_pin = int(config.attributes.fields["echo_pin"].number_value)
         # set both pins to low state
@@ -60,13 +65,13 @@ class HCSR04(Sensor, Reconfigurable):
         echo = GPIO(self.echo_pin, "in")
 
         trigger.write(True)
-        time.sleep(.00001)
+        time.sleep(0.00001)
         trigger.write(False)
 
-        while echo.read()==False:
+        while echo.read() == False:
             pulse_start = time.time()
 
-        while echo.read()==True:
+        while echo.read() == True:
             pulse_end = time.time()
 
         pulse_duration = pulse_end - pulse_start
