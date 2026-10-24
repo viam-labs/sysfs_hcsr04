@@ -1,8 +1,8 @@
 import asyncio
-import sys
 
 from viam.components.sensor import Sensor
 from viam.module.module import Module
+
 from .sysfs_hcsr04 import HCSR04
 
 

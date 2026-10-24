@@ -1,19 +1,15 @@
-from typing import ClassVar, Mapping, Sequence, Any, Dict, Optional, cast
-from typing_extensions import Self
-
-from viam.module.types import Reconfigurable
-from viam.proto.app.robot import ComponentConfig
-from viam.proto.common import ResourceName, Vector3
-from viam.resource.base import ResourceBase
-from viam.resource.types import Model, ModelFamily
-
-from viam.components.sensor import Sensor
-from viam.logging import getLogger
-
 import time
-import asyncio
+from typing import Any, ClassVar, Dict, Mapping, Optional
 
 from periphery import GPIO
+from typing_extensions import Self
+from viam.components.sensor import Sensor
+from viam.logging import getLogger
+from viam.module.types import Reconfigurable
+from viam.proto.app.robot import ComponentConfig
+from viam.proto.common import ResourceName
+from viam.resource.base import ResourceBase
+from viam.resource.types import Model, ModelFamily
 
 LOGGER = getLogger(__name__)
 
