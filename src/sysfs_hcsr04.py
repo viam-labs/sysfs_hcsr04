@@ -1,25 +1,22 @@
-from typing import ClassVar, Mapping, Sequence, Any, Dict, Optional, cast
-from typing_extensions import Self
+import time
+from typing import Any, ClassVar, Dict, Mapping, Optional
 
+from periphery import GPIO
+from typing_extensions import Self
+from viam.components.sensor import Sensor
+from viam.logging import getLogger
 from viam.module.types import Reconfigurable
 from viam.proto.app.robot import ComponentConfig
-from viam.proto.common import ResourceName, Vector3
+from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
 
-from viam.components.sensor import Sensor
-from viam.logging import getLogger
-
-import time
-import asyncio
-
-from periphery import GPIO
-
 LOGGER = getLogger(__name__)
+
 
 class HCSR04(Sensor, Reconfigurable):
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "sensor"), "sysfs-hcsr04")
-    
+
     trigger_pin: int
     echo_pin: int
 
@@ -60,13 +57,13 @@ class HCSR04(Sensor, Reconfigurable):
         echo = GPIO(self.echo_pin, "in")
 
         trigger.write(True)
-        time.sleep(.00001)
+        time.sleep(0.00001)
         trigger.write(False)
 
-        while echo.read()==False:
+        while not echo.read():
             pulse_start = time.time()
 
-        while echo.read()==True:
+        while echo.read():
             pulse_end = time.time()
 
         pulse_duration = pulse_end - pulse_start
