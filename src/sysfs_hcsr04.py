@@ -22,9 +22,7 @@ class HCSR04(Sensor, Reconfigurable):
 
     # Constructor
     @classmethod
-    def new(
-        cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
-    ) -> Self:
+    def new(cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]) -> Self:
         sensor = cls(config.name)
         sensor.reconfigure(config, dependencies)
         return sensor
@@ -41,9 +39,7 @@ class HCSR04(Sensor, Reconfigurable):
         return
 
     # Handles attribute reconfiguration
-    def reconfigure(
-        self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
-    ):
+    def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
         self.trigger_pin = int(config.attributes.fields["trigger_pin"].number_value)
         self.echo_pin = int(config.attributes.fields["echo_pin"].number_value)
         # set both pins to low state
